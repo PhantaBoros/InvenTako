@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | InvenTako</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center">
+
+    <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-200 text-center max-w-sm w-full">
+        <h1 class="text-2xl font-extrabold text-slate-800 mb-2">Ini Dashboard</h1>
+        <p class="text-slate-500 mb-8">Selamat datang di aplikasi <strong>InvenTako</strong>!</p>
+        
+        <button onclick="handleLogout()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-all">
+            Logout
+        </button>
+    </div>
+
+    <script>
+        // Cek apakah user sudah login atau belum
+        // Kalau tidak ada token di localStorage, tendang balik ke login.html
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Akses ditolak! Silakan login dulu.');
+            window.location.href = 'login.html';
+        }
+
+        function handleLogout() {
+            // Hapus tiket masuk (token)
+            localStorage.removeItem('token');
+            // Balik ke halaman login
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

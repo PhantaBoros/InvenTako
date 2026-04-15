@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register Account | The Precision Ledger</title>
+<!-- Fonts: Manrope & Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#2e5bff",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#57657a",
+                    "on-background": "#191c1e",
+                    "on-surface": "#191c1e",
+                    "on-secondary-fixed": "#0d1c2e",
+                    "on-primary-container": "#efefff",
+                    "inverse-primary": "#b8c3ff",
+                    "outline-variant": "#c4c5d9",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-surface-variant": "#434656",
+                    "primary-fixed-dim": "#b8c3ff",
+                    "on-error": "#ffffff",
+                    "background": "#f7f9fb",
+                    "secondary-fixed": "#d5e3fc",
+                    "on-tertiary-container": "#ffece6",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "secondary": "#515f74",
+                    "inverse-surface": "#2d3133",
+                    "surface": "#f7f9fb",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#993100",
+                    "surface-container-highest": "#e0e3e5",
+                    "primary-fixed": "#dde1ff",
+                    "error": "#ba1a1a",
+                    "outline": "#747688",
+                    "surface-tint": "#124af0",
+                    "surface-bright": "#f7f9fb",
+                    "on-primary-fixed-variant": "#0035be",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-tertiary-fixed": "#380d00",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eceef0",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "surface-container-high": "#e6e8ea",
+                    "primary": "#0040e0",
+                    "on-primary-fixed": "#001356",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-low": "#f2f4f6",
+                    "tertiary-container": "#c24100",
+                    "secondary-container": "#d5e3fc",
+                    "on-secondary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #0040e0 0%, #2e5bff 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- Top Navigation Suppression: Per instructions, suppress nav for Transactional screens -->
+<main class="flex-grow flex items-center justify-center p-6 sm:p-12">
+<!-- Auth Container -->
+<div class="w-full max-w-[440px] flex flex-col gap-8">
+<!-- Branding Anchor -->
+<div class="text-center">
+<h1 class="font-headline font-extrabold text-3xl tracking-tighter mb-2" style="color: #2E5BFF;">InvenTako</h1>
+</div>
+<!-- Main Register Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 sm:p-10 transition-all duration-300">
+<header class="mb-8">
+<h2 class="font-headline font-bold text-2xl text-on-surface tracking-tight">Create Account</h2>
+<p class="text-on-surface-variant text-sm mt-1">Enter your details to initialize your ledger.</p>
+</header>
+<form class="flex flex-col gap-6" onsubmit="return false;">
+<!-- Email Field -->
+<div class="space-y-1.5">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">
+                            Email
+                        </label>
+<input id="email" required class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary/20 rounded-lg p-4 text-sm font-medium transition-all outline-none text-on-surface" placeholder="name@firm.com" type="email"/>
+</div>
+<!-- Password Field -->
+<div class="space-y-1.5">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">
+                            Password
+                        </label>
+<div class="relative">
+<input id="password" required class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary/20 rounded-lg p-4 text-sm font-medium transition-all outline-none text-on-surface" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Action 1: Verification -->
+<div class="pt-2">
+<button class="w-full py-4 rounded-xl font-headline font-bold text-sm tracking-wide transition-transform active:scale-95 shadow-lg shadow-primary/10 text-surface-container-lowest" style="background-color: #2E5BFF;">Register Account</button>
+</div>
+<!-- Secondary Verification Section (Emphasized per prompt) -->
+</form>
+<!-- Footer Links -->
+<div class="mt-10 text-center">
+<p class="text-on-surface-variant text-sm font-medium">
+                        Already have an account? 
+                        <a class="text-primary font-bold ml-1 hover:underline underline-offset-4 decoration-2" href="login.html">Sign In</a>
+</p>
+</div>
+</div>
+<!-- Global Footer Metadata -->
+</div>
+</main>
+<!-- Decoration Element: Precision Line -->
+<div class="fixed top-0 left-0 w-1 h-full bg-primary opacity-20"></div>
+<div class="fixed top-0 right-0 w-1 h-full bg-primary opacity-20"></div>
+<script>
+    async function handleRegister(event) {
+        event.preventDefault(); // Mencegah halaman refresh
+        
+        // Ambil nilai dari kotak input dan hilangkan spasi kosong di awal/akhir (.trim())
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        // CEK KEKOSONGAN (SATPAM FRONTEND)
+        if (!email || !password) {
+            alert('⚠️ Peringatan: Email dan Password wajib diisi!');
+            return; // Hentikan proses, jangan kirim ke server
+        }
+
+        try {
+            // Kirim data ke backend Node.js
+            const response = await fetch('http://localhost:3000/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+
+            // Cek apakah ada error (misal email sudah dipakai)
+            if (!response.ok) {
+                alert('❌ Gagal: ' + data.message);
+            } else {
+                alert('✅ Sukses: ' + data.message); 
+                window.location.href = 'login.html'; 
+            }
+        } catch (error) {
+            alert('❌ Terjadi kesalahan pada server. Pastikan backend menyala!');
+        }
+    }
+
+    const formRegister = document.querySelector('form');
+    formRegister.onsubmit = handleRegister;
+</script>
+</body></html>
