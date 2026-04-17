@@ -159,7 +159,13 @@
         // CEK KEKOSONGAN (SATPAM FRONTEND)
         if (!email || !password) {
             alert('⚠️ Peringatan: Email dan Password wajib diisi!');
-            return; // Hentikan proses, jangan kirim ke server
+            return; 
+        }
+
+        // CEK FORMAT GMAIL (SATPAM BARU)
+        if (!email.endsWith('@gmail.com')) {
+            alert('⚠️ Peringatan: Harus menggunakan email @gmail.com!');
+            return;
         }
 
         try {
