@@ -3,7 +3,7 @@
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title content="InvenTako | Sign In">Precision Ledger | Sign In</title>
+<title content="InvenTako | Sign In">Inventako | Sign In</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -129,11 +129,6 @@
 <input class="block w-full pl-12 pr-12 py-3.5 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all text-on-surface placeholder:text-outline" id="password" name="password" placeholder="••••••••" required="" type="password"/>
 </div>
 </div>
-<!-- Remember Me -->
-<div class="flex items-center space-x-3 px-1">
-<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" id="remember" name="remember" type="checkbox"/>
-<label class="text-sm text-on-surface-variant font-medium select-none" for="remember">Keep me signed in for 30 days</label>
-</div>
 <!-- Action Button -->
 <div class="pt-4">
 <button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-4 px-6 rounded-lg shadow-lg shadow-primary/10 hover:shadow-primary/20 hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
@@ -159,7 +154,49 @@
 </div>
 </div>
 </div>
+<div id="customModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 sm:p-6 bg-on-background/20 backdrop-blur-sm transition-opacity duration-300">
+    <div class="bg-surface-container-lowest w-full max-w-sm rounded-xl p-8 shadow-[0_8px_32px_rgba(25,28,30,0.08)] border border-outline-variant/20 flex flex-col items-center text-center transform transition-all duration-300 scale-100 opacity-100">
+        
+        <h2 id="modalTitle" class="font-headline text-2xl font-bold text-on-surface mb-3 tracking-tight">Judul Error</h2>
+        
+        <p id="modalMessage" class="font-body text-base text-on-surface-variant mb-8 leading-relaxed">
+            Pesan error akan muncul di sini.
+        </p>
+        
+        <button id="modalButton" onclick="closeModal()" class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-3 px-6 rounded-lg shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all focus:outline-none">
+            Try Again
+        </button>
+
+    </div>
+</div>
 <script>
+    // FUNGSI UNTUK MENGONTROL MODAL
+    function showModal(title, message, buttonText = "Tutup", isSuccess = false) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalMessage').innerText = message;
+        document.getElementById('modalButton').innerText = buttonText;
+        
+        const modal = document.getElementById('customModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Kalau sukses login, tombolnya akan memindahkan halaman
+        if (isSuccess) {
+            document.getElementById('modalButton').onclick = function() {
+                window.location.href = 'dashboard.html';
+            };
+        } else {
+            // Kalau error, tombolnya cuma menutup modal
+            document.getElementById('modalButton').onclick = closeModal;
+        }
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('customModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
     async function handleLogin(event) {
         event.preventDefault(); // Mencegah halaman refresh
         
@@ -169,7 +206,7 @@
 
         // CEK KEKOSONGAN
         if (!email || !password) {
-            alert('⚠️ Peringatan: Email dan Password wajib diisi!');
+            showModal('Data Belum Lengkap', 'Email dan Password wajib diisi!', 'Mengerti');
             return;
         }
 
@@ -185,18 +222,14 @@
 
             // Cek apakah error (email/password salah)
             if (!response.ok) {
-                alert('❌ Gagal: ' + data.message); // Pop-up error dari backend
+                showModal('Gagal Masuk', data.message, 'Coba Lagi');
             } else {
-                alert('✅ ' + data.message); // Pop-up sukses
-                
                 // Simpan "tiket masuk" (token) di browser
                 localStorage.setItem('token', data.token); 
-                
-                // Pindah ke halaman utama (Dashboard)
-                window.location.href = 'index.html'; 
+                showModal('Akses Diberikan', data.message, 'Masuk Dashboard', true);
             }
         } catch (error) {
-            alert('❌ Terjadi kesalahan pada server. Pastikan backend menyala!');
+            showModal('Server Error', 'Terjadi kesalahan pada server. Pastikan backend menyala!', 'Tutup');
         }
     }
 

@@ -109,7 +109,7 @@
 <div class="bg-surface-container-lowest rounded-xl p-8 sm:p-10 transition-all duration-300">
 <header class="mb-8">
 <h2 class="font-headline font-bold text-2xl text-on-surface tracking-tight">Create Account</h2>
-<p class="text-on-surface-variant text-sm mt-1">Enter your details to initialize your ledger.</p>
+<p class="text-on-surface-variant text-sm mt-1">Enter your details to initialize your account.</p>
 </header>
 <form class="flex flex-col gap-6" onsubmit="return false;">
 <!-- Email Field -->
@@ -117,7 +117,7 @@
 <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">
                             Email
                         </label>
-<input id="email" required class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary/20 rounded-lg p-4 text-sm font-medium transition-all outline-none text-on-surface" placeholder="name@firm.com" type="email"/>
+<input id="email" required class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary/20 rounded-lg p-4 text-sm font-medium transition-all outline-none text-on-surface" placeholder="name@gmail.com" type="email"/>
 </div>
 <!-- Password Field -->
 <div class="space-y-1.5">
@@ -148,7 +148,45 @@
 <!-- Decoration Element: Precision Line -->
 <div class="fixed top-0 left-0 w-1 h-full bg-primary opacity-20"></div>
 <div class="fixed top-0 right-0 w-1 h-full bg-primary opacity-20"></div>
+<div id="customModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 sm:p-6 bg-on-background/20 backdrop-blur-sm transition-opacity duration-300">
+    <div class="bg-surface-container-lowest w-full max-w-sm rounded-xl p-8 shadow-[0_8px_32px_rgba(25,28,30,0.08)] border border-outline-variant/20 flex flex-col items-center text-center transform transition-all duration-300 scale-100 opacity-100">
+        <h2 id="modalTitle" class="font-headline text-2xl font-bold text-on-surface mb-3 tracking-tight">Judul Error</h2>
+        <p id="modalMessage" class="font-body text-base text-on-surface-variant mb-8 leading-relaxed">
+            Pesan error akan muncul di sini.
+        </p>
+        <button id="modalButton" onclick="closeModal()" class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-3 px-6 rounded-lg shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all focus:outline-none">
+            Try Again
+        </button>
+    </div>
+</div>
 <script>
+// FUNGSI UNTUK MENGONTROL MODAL
+    function showModal(title, message, buttonText = "Tutup", isSuccess = false) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalMessage').innerText = message;
+        document.getElementById('modalButton').innerText = buttonText;
+        
+        const modal = document.getElementById('customModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Kalau sukses login, tombolnya akan memindahkan halaman
+        if (isSuccess) {
+            document.getElementById('modalButton').onclick = function() {
+                window.location.href = 'login.html';
+            };
+        } else {
+            // Kalau error, tombolnya cuma menutup modal
+            document.getElementById('modalButton').onclick = closeModal;
+        }
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('customModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
     async function handleRegister(event) {
         event.preventDefault(); // Mencegah halaman refresh
         
@@ -158,13 +196,13 @@
 
         // CEK KEKOSONGAN (SATPAM FRONTEND)
         if (!email || !password) {
-            alert('⚠️ Peringatan: Email dan Password wajib diisi!');
+            showModal('Data Belum Lengkap', 'Email dan Password wajib diisi!', 'Mengerti');
             return; 
         }
 
         // CEK FORMAT GMAIL (SATPAM BARU)
         if (!email.endsWith('@gmail.com')) {
-            alert('⚠️ Peringatan: Harus menggunakan email @gmail.com!');
+            showModal('Format Tidak Sesuai', 'Harus menggunakan email @gmail.com!', 'Mengerti');
             return;
         }
 
@@ -180,13 +218,12 @@
 
             // Cek apakah ada error (misal email sudah dipakai)
             if (!response.ok) {
-                alert('❌ Gagal: ' + data.message);
+                showModal('Registrasi Ditolak', data.message, 'Ganti Email');
             } else {
-                alert('✅ Sukses: ' + data.message); 
-                window.location.href = 'login.html'; 
+                showModal('Akun Berhasil Dibuat', data.message, 'Lanjut Sign In', true); 
             }
         } catch (error) {
-            alert('❌ Terjadi kesalahan pada server. Pastikan backend menyala!');
+            showModal('Server Error', 'Terjadi kesalahan pada server. Pastikan backend menyala!', 'Tutup');
         }
     }
 
