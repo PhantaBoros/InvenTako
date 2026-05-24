@@ -1,30 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | InvenTako</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        h1 { font-family: 'Manrope', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center">
 
-    <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-200 text-center max-w-sm w-full">
-        <h1 class="text-2xl font-extrabold text-slate-800 mb-2">Ini Dashboard</h1>
-        <p class="text-slate-500 mb-8">Selamat datang di aplikasi <strong>InvenTako</strong>!</p>
-        
-        <button onclick="handleLogout()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-all">
-            Logout
-        </button>
+<body class="bg-white min-h-screen flex flex-col text-slate-800">
+
+    <!-- Navbar -->
+    <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+        <div class="text-3xl font-extrabold text-[#0044ff] tracking-tight">InvenTako</div>
+        <div class="flex items-center gap-2 text-[#0044ff] cursor-pointer hover:text-blue-800 transition-colors"
+            onclick="handleLogout()" title="Logout">
+            <i data-lucide="circle-user" class="w-8 h-8" stroke-width="2"></i>
+            <span class="text-xl font-medium">User</span>
+        </div>
+    </header>
+
+    <!-- Main Wrapper -->
+    <div class="flex flex-1 overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-56 border-r border-slate-200 py-6 flex flex-col gap-1">
+            <a href="dashboard.html" class="flex items-center gap-3 px-6 py-3 bg-[#0044ff] text-white">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="barang.html"
+                class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="book-marked" class="w-5 h-5"></i>
+                <span class="font-medium">Barang</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="banknote" class="w-5 h-5"></i>
+                <span class="font-medium">Transaksi</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span class="font-medium">Profil</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="font-medium">Settings</span>
+            </a>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-y-auto bg-white">
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-4 gap-6 mb-6">
+                <div class="p-6 border border-slate-200 rounded-lg shadow-sm bg-white flex flex-col justify-between h-32">
+                    <p class="text-slate-500 font-bold text-sm">Total Barang</p>
+                    <p class="text-2xl font-bold text-black mt-2" id="totalBarangDashboard">0</p>
+                </div>
+                <div class="p-6 border border-slate-200 rounded-lg shadow-sm bg-white flex flex-col justify-between h-32">
+                    <p class="text-slate-500 font-bold text-sm">Stok</p>
+                    <p class="text-2xl font-bold text-black mt-2" id="totalStokDashboard">0</p>
+                </div>
+                <div
+                    class="p-6 border border-slate-200 rounded-lg shadow-sm bg-white flex flex-col justify-between h-32">
+                    <p class="text-slate-500 font-bold text-sm">Transaksi Hari Ini</p>
+                    <p class="text-2xl font-bold text-black mt-2">0</p>
+                </div>
+                <div
+                    class="p-6 border border-slate-200 rounded-lg shadow-sm bg-white flex flex-col justify-between h-32">
+                    <p class="text-slate-500 font-bold text-sm">Pendapatan</p>
+                    <p class="text-2xl font-bold text-black mt-2">Rp 0</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 mb-8">
+                <button
+                    class="bg-[#0044ff] hover:bg-blue-700 text-white px-5 py-2 rounded-md font-medium transition-colors shadow-sm">
+                    + Transaksi Baru
+                </button>
+                <button
+                    class="bg-[#0044ff] hover:bg-blue-700 text-white px-5 py-2 rounded-md font-medium transition-colors shadow-sm">
+                    + Tambah Barang
+                </button>
+            </div>
+
+            <!-- Riwayat Transaksi Terbaru -->
+            <div class="mb-8">
+                <h2 class="text-[16px] font-bold text-black mb-3">Riwayat Transaksi Terbaru</h2>
+                <div class="border border-slate-200 rounded-md h-36 bg-white shadow-sm"></div>
+            </div>
+
+            <!-- Daftar Barang -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-[16px] font-bold text-black">Daftar Barang</h2>
+                    <a href="barang.html" class="text-sm text-[#0044ff] font-medium hover:underline">Lihat Semua</a>
+                </div>
+                <div class="border border-slate-200 rounded-md bg-white shadow-sm overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-200 border-b border-slate-200">
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Kode</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Nama Barang</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Kategori</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Harga</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Stok</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBodyDashboard">
+                            <!-- Items will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
     </div>
 
     <script>
+        lucide.createIcons();
+
         // Cek apakah user sudah login atau belum
-        // Kalau tidak ada token di localStorage, tendang balik ke login.html
         const token = localStorage.getItem('token');
         if (!token) {
             alert('Akses ditolak! Silakan login dulu.');
@@ -32,11 +137,74 @@
         }
 
         function handleLogout() {
-            // Hapus tiket masuk (token)
             localStorage.removeItem('token');
-            // Balik ke halaman login
             window.location.href = 'login.html';
         }
+
+        async function fetchDashboardItems() {
+            try {
+                const response = await fetch('http://localhost:3000/api/items', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                
+                if (!response.ok) throw new Error('Gagal mengambil data barang');
+                
+                const items = await response.json();
+                renderDashboardItems(items);
+            } catch (error) {
+                console.error(error);
+                document.getElementById('tableBodyDashboard').innerHTML = '<tr><td colspan="6" class="text-center py-4 text-red-500">Gagal memuat data.</td></tr>';
+            }
+        }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        }
+
+        function renderDashboardItems(items) {
+            const tableBody = document.getElementById('tableBodyDashboard');
+            tableBody.innerHTML = '';
+            
+            let totalStok = 0;
+            items.forEach(item => totalStok += item.stok);
+
+            document.getElementById('totalBarangDashboard').textContent = items.length;
+            document.getElementById('totalStokDashboard').textContent = totalStok;
+
+            if (items.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-slate-500">Belum ada barang.</td></tr>';
+            } else {
+                // Tampilkan maksimal 5 barang terbaru di dashboard
+                const recentItems = items.slice(0, 5);
+                recentItems.forEach(item => {
+                    const harga = parseFloat(item.harga);
+                    let statusBadge = '';
+                    if (item.stok > 5) {
+                        statusBadge = '<span class="bg-[#22c55e] text-white px-3 py-1 rounded text-xs font-medium">Tersedia</span>';
+                    } else if (item.stok > 0) {
+                        statusBadge = '<span class="bg-amber-500 text-white px-3 py-1 rounded text-xs font-medium">Menipis</span>';
+                    } else {
+                        statusBadge = '<span class="bg-red-600 text-white px-3 py-1 rounded text-xs font-medium">Habis</span>';
+                    }
+
+                    const row = `
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                            <td class="py-3 px-4 text-sm text-slate-800">${item.kode}</td>
+                            <td class="py-3 px-4 text-sm text-slate-800">${item.nama}</td>
+                            <td class="py-3 px-4 text-sm text-slate-800">${item.kategori}</td>
+                            <td class="py-3 px-4 text-sm text-slate-800">${formatRupiah(harga)}</td>
+                            <td class="py-3 px-4 text-sm text-slate-800">${item.stok}</td>
+                            <td class="py-3 px-4 text-sm">${statusBadge}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            }
+        }
+
+        // Initialize
+        fetchDashboardItems();
     </script>
 </body>
+
 </html>

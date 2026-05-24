@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Barang | InvenTako</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col text-slate-800">
+
+    <!-- Navbar -->
+    <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+        <div class="text-3xl font-extrabold text-[#0044ff] tracking-tight">InvenTako</div>
+        <div class="flex items-center gap-2 text-[#0044ff] cursor-pointer hover:text-blue-800 transition-colors" onclick="handleLogout()" title="Logout">
+            <i data-lucide="circle-user" class="w-8 h-8" stroke-width="2"></i>
+            <span class="text-xl font-medium">User</span>
+        </div>
+    </header>
+
+    <!-- Main Wrapper -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-56 border-r border-slate-200 py-6 flex flex-col gap-1">
+            <a href="dashboard.html" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="barang.html" class="flex items-center gap-3 px-6 py-3 bg-[#0044ff] text-white">
+                <i data-lucide="book-marked" class="w-5 h-5"></i>
+                <span class="font-medium">Barang</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="banknote" class="w-5 h-5"></i>
+                <span class="font-medium">Transaksi</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span class="font-medium">Profil</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="font-medium">Settings</span>
+            </a>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-y-auto bg-white">
+            
+            <div class="flex items-center gap-4 mb-6">
+                <a href="barang.html" class="p-2 hover:bg-slate-100 rounded-full text-black"><i data-lucide="arrow-left" class="w-6 h-6"></i></a>
+                <div>
+                    <h1 class="text-xl font-bold text-black">Edit Barang</h1>
+                    <p class="text-slate-500 text-sm">Perbarui informasi barang</p>
+                </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-lg p-6 max-w-3xl shadow-sm">
+                <h2 class="text-lg font-bold text-black mb-6">Informasi Barang</h2>
+                
+                <form id="formEditBarang" class="flex flex-col gap-5">
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="flex flex-col gap-2">
+                            <label class="font-semibold text-black text-sm">Nama Barang*</label>
+                            <input type="text" id="nama" required class="bg-slate-200 border-none rounded-md px-4 py-2.5 text-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-[#0044ff] focus:outline-none" placeholder="Contoh: Laptop Dell XPS 13">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="font-semibold text-black text-sm">Kode*</label>
+                            <input type="text" id="kode" required class="bg-slate-200 border-none rounded-md px-4 py-2.5 text-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-[#0044ff] focus:outline-none" placeholder="Contoh: LPT-001">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="font-semibold text-black text-sm">Kategori*</label>
+                            <select id="kategori" required class="bg-slate-200 border-none rounded-md px-4 py-2.5 text-slate-700 focus:ring-2 focus:ring-[#0044ff] focus:outline-none">
+                                <option value="" disabled selected>Pilih Kategori</option>
+                                <option value="Elektronik">Elektronik</option>
+                                <option value="Perabotan">Perabotan</option>
+                                <option value="Makanan">Makanan</option>
+                                <option value="Pakaian">Pakaian</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="font-semibold text-black text-sm">Harga*</label>
+                            <input type="number" id="harga" required class="bg-slate-200 border-none rounded-md px-4 py-2.5 text-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-[#0044ff] focus:outline-none" placeholder="Contoh: 15000000">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="font-semibold text-black text-sm">Stok*</label>
+                            <input type="number" id="stok" required class="bg-slate-200 border-none rounded-md px-4 py-2.5 text-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-[#0044ff] focus:outline-none" placeholder="Contoh: 10">
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2">
+                        <label class="font-semibold text-black text-sm">Deskripsi</label>
+                        <textarea id="deskripsi" rows="3" class="bg-slate-200 border-none rounded-md px-4 py-2.5 text-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-[#0044ff] focus:outline-none" placeholder="Deskripsi singkat tentang barang..."></textarea>
+                    </div>
+
+                    <div class="flex items-center gap-3 mt-4">
+                        <button type="submit" class="bg-[#0044ff] hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-md transition-colors shadow-sm">Simpan Perubahan</button>
+                        <a href="barang.html" class="border border-slate-200 text-black hover:bg-slate-50 font-medium px-6 py-2.5 rounded-md transition-colors">Batal</a>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Cek login
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Akses ditolak! Silakan login dulu.');
+            window.location.href = 'login.html';
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const itemId = urlParams.get('id');
+
+        if (!itemId) {
+            alert('Barang tidak ditemukan!');
+            window.location.href = 'barang.html';
+        }
+
+        // Fetch data barang
+        async function fetchItemDetails() {
+            try {
+                const response = await fetch(`http://localhost:3000/api/items/${itemId}`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data barang');
+                }
+                
+                const item = await response.json();
+                document.getElementById('nama').value = item.nama;
+                document.getElementById('kode').value = item.kode;
+                document.getElementById('kategori').value = item.kategori;
+                document.getElementById('harga').value = item.harga;
+                document.getElementById('stok').value = item.stok;
+                document.getElementById('deskripsi').value = item.deskripsi || '';
+            } catch (error) {
+                console.error(error);
+                alert('Gagal memuat data barang. Pastikan server berjalan.');
+                window.location.href = 'barang.html';
+            }
+        }
+
+        fetchItemDetails();
+
+        // Logic simpan perubahan
+        document.getElementById('formEditBarang').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                nama: document.getElementById('nama').value,
+                kode: document.getElementById('kode').value,
+                kategori: document.getElementById('kategori').value,
+                harga: document.getElementById('harga').value,
+                stok: document.getElementById('stok').value,
+                deskripsi: document.getElementById('deskripsi').value
+            };
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/items/${itemId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Barang berhasil diperbarui!');
+                    window.location.href = 'barang.html';
+                } else {
+                    alert(result.message || 'Gagal memperbarui barang.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan pada server.');
+            }
+        });
+    </script>
+</body>
+</html>
