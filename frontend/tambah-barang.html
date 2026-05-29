@@ -35,17 +35,17 @@
                 <i data-lucide="book-marked" class="w-5 h-5"></i>
                 <span class="font-medium">Barang</span>
             </a>
-            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+            <a href="transaksi.html" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
                 <i data-lucide="banknote" class="w-5 h-5"></i>
                 <span class="font-medium">Transaksi</span>
+            </a>
+            <a href="riwayat-transaksi.html" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
+                <i data-lucide="history" class="w-5 h-5"></i>
+                <span class="font-medium">Riwayat Transaksi</span>
             </a>
             <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
                 <i data-lucide="user" class="w-5 h-5"></i>
                 <span class="font-medium">Profil</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 px-6 py-3 text-black hover:bg-slate-50 transition-colors">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-                <span class="font-medium">Settings</span>
             </a>
         </aside>
 
@@ -109,6 +109,18 @@
         </main>
     </div>
 
+    <div id="toastNotification" class="fixed top-8 right-8 transform translate-x-[150%] transition-transform duration-300 ease-out z-50">
+        <div id="toastContent" class="bg-white border-l-4 shadow-xl rounded-md p-4 flex items-start gap-3 w-80">
+            <div id="toastIconContainer" class="mt-0.5">
+                <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h4 id="toastTitle" class="text-sm font-bold text-slate-800">Title</h4>
+                <p id="toastMessage" class="text-sm text-slate-500 mt-1">Message here...</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         lucide.createIcons();
 
@@ -124,10 +136,55 @@
             window.location.href = 'login.html';
         }
 
+        function showToast(title, message, isSuccess = true) {
+            const toast = document.getElementById('toastNotification');
+            const toastContent = document.getElementById('toastContent');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            // Ubah teks
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            // Atur warna dan ikon berdasarkan sukses/gagal
+            if (isSuccess) {
+                toastContent.className = "bg-white border-l-4 border-green-500 shadow-xl rounded-md p-4 flex items-start gap-3 w-80";
+                toastIcon.setAttribute('data-lucide', 'check-circle');
+                document.getElementById('toastIconContainer').className = "mt-0.5 text-green-500";
+            } else {
+                toastContent.className = "bg-white border-l-4 border-red-500 shadow-xl rounded-md p-4 flex items-start gap-3 w-80";
+                toastIcon.setAttribute('data-lucide', 'x-circle');
+                document.getElementById('toastIconContainer').className = "mt-0.5 text-red-500";
+            }
+            
+            lucide.createIcons(); // Render ulang ikon
+
+            // Munculkan toast dengan menghapus class translate (geser ke dalam layar)
+            toast.classList.remove('translate-x-[150%]');
+
+            // Hilangkan toast setelah 2 detik
+            setTimeout(() => {
+                toast.classList.add('translate-x-[150%]');
+                
+                // Kalau sukses, otomatis pindah ke halaman barang setelah toast menghilang
+                if (isSuccess) {
+                    setTimeout(() => {
+                        window.location.href = 'barang.html';
+                    }, 300); // Jeda sedikit animasi keluar sebelum pindah halaman
+                }
+            }, 2000); // 2000 ms = 2 detik
+        }
+
         // Logic simpan barang
         document.getElementById('formTambahBarang').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Menyimpan...';
+            submitBtn.disabled = true;
+
             const payload = {
                 nama: document.getElementById('nama').value,
                 kode: document.getElementById('kode').value,
@@ -150,14 +207,17 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    alert('Barang berhasil ditambahkan!');
-                    window.location.href = 'barang.html';
+                    showToast('Berhasil!', 'Barang berhasil ditambahkan!');
                 } else {
-                    alert(result.message || 'Gagal menambahkan barang.');
+                    showToast('Gagal!', result.message || 'Gagal menambahkan barang.', false);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan pada server.');
+                showToast('Gagal!', 'Terjadi kesalahan pada server.', false);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         });
     </script>
