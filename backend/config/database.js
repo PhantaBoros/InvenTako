@@ -36,7 +36,38 @@ const initDB = async () => {
         `;
         await db.query(createItemsTableQuery);
 
-        console.log("Database siap: Tabel 'user' dan 'items' berhasil dicek/dibuat otomatis.");
+        const createTransactionsTableQuery = `
+            CREATE TABLE IF NOT EXISTS transactions (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                no_nota VARCHAR(50) NOT NULL UNIQUE,
+                total_item INT NOT NULL,
+                total_belanja DECIMAL(15, 2) NOT NULL,
+                uang_tunai DECIMAL(15, 2) NOT NULL,
+                kembalian DECIMAL(15, 2) NOT NULL,
+                tanggal DATETIME DEFAULT CURRENT_TIMESTAMP,
+                idUser INT NOT NULL,
+                FOREIGN KEY (idUser) REFERENCES user(idUser) ON DELETE CASCADE
+            )
+        `;
+        await db.query(createTransactionsTableQuery);
+
+        const createTransactionDetailsTableQuery = `
+            CREATE TABLE IF NOT EXISTS transaction_details (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                id_transaksi INT NOT NULL,
+                id_barang INT,
+                kode_barang VARCHAR(50),
+                nama_barang VARCHAR(255),
+                qty INT NOT NULL,
+                harga_satuan DECIMAL(15, 2) NOT NULL,
+                subtotal DECIMAL(15, 2) NOT NULL,
+                FOREIGN KEY (id_transaksi) REFERENCES transactions(id) ON DELETE CASCADE,
+                FOREIGN KEY (id_barang) REFERENCES items(id) ON DELETE SET NULL
+            )
+        `;
+        await db.query(createTransactionDetailsTableQuery);
+        
+        console.log("Database siap: Tabel 'user', 'items', 'transactions', dan 'transaction_details' berhasil dicek/dibuat otomatis.");
     } catch (error) {
         console.error("Gagal membuat tabel:", error);
     }

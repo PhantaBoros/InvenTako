@@ -18,7 +18,7 @@
 <body class="bg-white min-h-screen flex flex-col text-slate-800">
 
     <!-- Navbar -->
-    <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+    <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white shadow-sm">
         <div class="text-3xl font-extrabold text-[#0044ff] tracking-tight">InvenTako</div>
         <div class="flex items-center gap-2 text-[#0044ff] cursor-pointer hover:text-blue-800 transition-colors"
             onclick="handleLogout()" title="Logout">
@@ -28,10 +28,10 @@
     </header>
 
     <!-- Main Wrapper -->
-    <div class="flex flex-1 overflow-hidden">
+<div class="flex flex-1 overflow-hidden pt-20">
 
         <!-- Sidebar -->
-        <aside class="w-56 border-r border-slate-200 py-6 flex flex-col gap-1">
+        <aside class="fixed top-20 left-0 bottom-0 w-56 border-r border-slate-200 py-6 flex flex-col gap-1 bg-white z-40">
             <a href="dashboard.html" class="flex items-center gap-3 px-6 py-3 bg-[#0044ff] text-white">
                 <i data-lucide="layout-grid" class="w-5 h-5"></i>
                 <span class="font-medium">Dashboard</span>
@@ -56,7 +56,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-8 overflow-y-auto bg-white">
+        <main class="flex-1 p-8 overflow-y-auto bg-white ml-56">
 
             <!-- Stats Cards -->
             <div class="grid grid-cols-4 gap-6 mb-6">
@@ -71,18 +71,19 @@
                 <div
                     class="p-6 border border-slate-200 rounded-lg shadow-sm bg-white flex flex-col justify-between h-32">
                     <p class="text-slate-500 font-bold text-sm">Transaksi Hari Ini</p>
-                    <p class="text-2xl font-bold text-black mt-2">0</p>
+                    <p id="todayTransactionsDashboard" class="text-2xl font-bold text-black mt-2">0</p>
                 </div>
                 <div
                     class="p-6 border border-slate-200 rounded-lg shadow-sm bg-white flex flex-col justify-between h-32">
-                    <p class="text-slate-500 font-bold text-sm">Pendapatan</p>
-                    <p class="text-2xl font-bold text-black mt-2">Rp 0</p>
+                    <p class="text-slate-500 font-bold text-sm">Pendapatan Hari Ini</p>
+                    <p id="todayRevenueDashboard" class="text-2xl font-bold text-black mt-2">Rp 0</p>
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="flex gap-4 mb-8">
                 <button
+                    onclick="window.location.href='transaksi.html'"
                     class="bg-[#0044ff] hover:bg-blue-700 text-white px-5 py-2 rounded-md font-medium transition-colors shadow-sm">
                     + Transaksi Baru
                 </button>
@@ -96,7 +97,23 @@
             <!-- Riwayat Transaksi Terbaru -->
             <div class="mb-8">
                 <h2 class="text-[16px] font-bold text-black mb-3">Riwayat Transaksi Terbaru</h2>
-                <div class="border border-slate-200 rounded-md h-36 bg-white shadow-sm"></div>
+                <div class="border border-slate-200 rounded-md bg-white shadow-sm overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-200 border-b border-slate-200">
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">No. Nota</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Tanggal</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Total</th>
+                                <th class="py-3 px-4 font-semibold text-slate-800 text-sm">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="latestTransactionsDashboardBody">
+                            <tr>
+                                <td colspan="4" class="text-center py-6 text-slate-500">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Daftar Barang -->
@@ -162,6 +179,11 @@
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
         }
 
+        function parseAmount(value) {
+            const cleaned = (value ?? '0').toString().replace(/[^0-9.-]+/g, '');
+            return Number(cleaned) || 0;
+        }
+
         function renderDashboardItems(items) {
             const tableBody = document.getElementById('tableBodyDashboard');
             tableBody.innerHTML = '';
@@ -176,7 +198,7 @@
                 tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-slate-500">Belum ada barang.</td></tr>';
             } else {
                 // Tampilkan maksimal 5 barang terbaru di dashboard
-                const recentItems = items.slice(0, 5);
+                const recentItems = [...items].sort((a, b) => b.id - a.id).slice(0, 5);
                 recentItems.forEach(item => {
                     const harga = parseFloat(item.harga);
                     let statusBadge = '';
@@ -203,8 +225,56 @@
             }
         }
 
+        async function fetchDashboardTransactions() {
+            try {
+                const response = await fetch('http://localhost:3000/api/transactions', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) throw new Error('Gagal mengambil data transaksi');
+
+                const transactions = await response.json();
+                renderDashboardTransactions(transactions);
+            } catch (error) {
+                console.error(error);
+                document.getElementById('latestTransactionsDashboardBody').innerHTML = '<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal memuat transaksi.</td></tr>';
+            }
+        }
+
+        function renderDashboardTransactions(transactions) {
+            const today = new Date().toISOString().slice(0, 10);
+            const todayTransactions = transactions.filter(trx => new Date(trx.tanggal).toISOString().slice(0, 10) === today);
+            const todayRevenue = todayTransactions.reduce((sum, trx) => sum + parseAmount(trx.total_belanja), 0);
+
+            document.getElementById('todayTransactionsDashboard').textContent = todayTransactions.length;
+            document.getElementById('todayRevenueDashboard').textContent = formatRupiah(todayRevenue);
+
+            const tableBody = document.getElementById('latestTransactionsDashboardBody');
+            if (transactions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-6 text-slate-500">Belum ada transaksi.</td></tr>';
+                return;
+            }
+
+            const recentTransactions = [...transactions]
+                .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal))
+                .slice(0, 5);
+
+            tableBody.innerHTML = recentTransactions.map(trx => {
+                const tanggal = new Date(trx.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const status = trx.status || 'Selesai';
+                return `
+                    <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                        <td class="py-3 px-4 text-sm text-slate-800">${trx.no_nota}</td>
+                        <td class="py-3 px-4 text-sm text-slate-800">${tanggal}</td>
+                        <td class="py-3 px-4 text-sm text-slate-800">${formatRupiah(parseAmount(trx.total_belanja))}</td>
+                        <td class="py-3 px-4 text-sm text-slate-800">${status}</td>
+                    </tr>`;
+            }).join('');
+        }
+
         // Initialize
         fetchDashboardItems();
+        fetchDashboardTransactions();
     </script>
 </body>
 

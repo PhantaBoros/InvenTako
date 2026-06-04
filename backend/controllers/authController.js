@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
         if (!isMatch) return res.status(401).json({ message: 'Password salah.' });
 
         const token = jwt.sign({ id: users[0].idUser }, process.env.JWT_SECRET, { expiresIn: '8h' });
-        res.status(200).json({ message: 'Login berhasil!', token });
+        res.status(200).json({ message: 'Login berhasil!', token, username: users[0].Username });
     } catch (error) {
         res.status(500).json({ message: 'Error server saat login.' });
     }

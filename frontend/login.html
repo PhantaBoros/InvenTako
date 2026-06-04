@@ -224,8 +224,9 @@
             if (!response.ok) {
                 showModal('Gagal Masuk', data.message, 'Coba Lagi');
             } else {
-                // Simpan "tiket masuk" (token) di browser
-                localStorage.setItem('token', data.token); 
+                // Simpan "tiket masuk" (token) dan username di browser
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username', data.username);
                 showModal('Akses Diberikan', data.message, 'Masuk Dashboard', true);
             }
         } catch (error) {

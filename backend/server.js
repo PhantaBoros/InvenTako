@@ -14,9 +14,11 @@ app.get('/', (req, res) => {
 
 const authRoutes = require('./routes/auth');
 const itemsRoutes = require('./routes/items');
+const transactionsRoutes = require('./routes/transactions');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemsRoutes);
+app.use('/api/transactions', transactionsRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server jalan di http://localhost:${PORT}`));
