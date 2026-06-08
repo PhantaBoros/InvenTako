@@ -100,3 +100,34 @@ exports.getTransactionDetail = async (req, res) => {
         connection.release();
     }
 };
+
+// Mengambil data analitik untuk grafik profil
+exports.getAnalytics = async (req, res) => {
+    const connection = await db.getConnection();
+    try {
+        //Ambil semua transaksi (untuk grafik garis & pie chart waktu)
+        const [transactions] = await connection.query(
+            'SELECT total_belanja, tanggal FROM transactions WHERE idUser = ? ORDER BY tanggal ASC',
+            [req.userId]
+        );
+
+        //Ambil 5 Barang Terlaku (Gabungkan detail & nota)
+        const [topItems] = await connection.query(
+            `SELECT td.nama_barang, SUM(td.qty) as total_qty
+             FROM transaction_details td
+             JOIN transactions t ON td.id_transaksi = t.id
+             WHERE t.idUser = ?
+             GROUP BY td.nama_barang
+             ORDER BY total_qty DESC
+             LIMIT 5`,
+            [req.userId]
+        );
+
+        res.status(200).json({ transactions, topItems });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Gagal mengambil data analitik.' });
+    } finally {
+        connection.release();
+    }
+};
